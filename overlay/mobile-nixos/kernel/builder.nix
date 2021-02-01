@@ -347,7 +347,8 @@ stdenv.mkDerivation (inputArgs // {
   buildPhase = if enableCombiningBuildAndInstallQuirk then ":" else null;
 
   installTargets =
-    if isCompressed != false then [ "zinstall" ] else [ "install" ]
+    (if isCompressed != false then [ "zinstall" ] else [ "install" ])
+    ++ optional isModular "modules_install"
     ++ installTargets
   ;
 

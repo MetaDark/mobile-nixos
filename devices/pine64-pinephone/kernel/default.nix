@@ -26,5 +26,6 @@ mobile-nixos.kernel-builder {
     cp -v $buildRoot/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-*.dtb $out/dtbs/allwinner/
   '';
 
+  isModular = false;
   isCompressed = false;
 }

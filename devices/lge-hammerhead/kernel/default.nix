@@ -2,6 +2,7 @@
 { lib
 , mobile-nixos
 , fetchFromGitLab
+, dtb
 , ...
 }:
 
@@ -17,6 +18,7 @@
     hash = "sha256-amPX1+cihLSf8PEnMhQmKjPwMTmjDgYrIUPjjSGpn44=";
   };
 
+  inherit dtb;
   isModular = true;
 
   meta = with lib; {

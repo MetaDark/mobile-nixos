@@ -17,7 +17,9 @@
 
   mobile.boot.stage-1 = {
     kernel = {
-      package = pkgs.callPackage ./kernel { };
+      package = pkgs.callPackage ./kernel {
+        dtb = "qcom-msm8974-lge-nexus5-hammerhead";
+      };
 
       # Source: https://gitlab.com/postmarketOS/pmaports/-/blob/9ae9a7eb2c70d6b23e52826f3c63c84117680003/device/testing/device-lg-hammerhead/deviceinfo
       modular = true;

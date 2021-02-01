@@ -5,7 +5,7 @@
 , ...
 }:
 
-mobile-nixos.kernel-builder rec {
+(mobile-nixos.kernel-builder rec {
   version = "5.9.13";
   modDirVersion = "${version}-postmarketos-qcom-msm8974";
   configfile = ./config.armv7l;
@@ -25,4 +25,7 @@ mobile-nixos.kernel-builder rec {
     license = licenses.gpl3Plus;
     maintainers = with maintainers; [ metadark ];
   };
-}
+}).overrideAttrs (attrs: {
+  # Strip out debug symbols that break modules closure generation
+  dontStrip = false;
+})

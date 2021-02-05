@@ -33,6 +33,11 @@ in
         "pm8941_pwrkey" "qnoc_msm8974" "rmi_i2c"
       ];
     };
+
+    firmware = with firmware; [
+      # GPU firmware
+      adreno330
+    ];
   };
 
   mobile.system.android = {

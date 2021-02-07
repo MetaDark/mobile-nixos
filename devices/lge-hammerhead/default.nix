@@ -1,6 +1,9 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
+  allowUnfreePredicate = config.nixpkgs.config.allowUnfreePredicate or
+    (pkg: config.nixpkgs.config.allowUnfree or pkg.meta.license.free or true);
+
   firmware = pkgs.callPackage ./firmware { };
 in
 {
@@ -63,7 +66,9 @@ in
     bcm4399
     bcm4399-config
     wireless-regdb
-  ];
+  ] ++ lib.optional (allowUnfreePredicate firmware.bcm4335c0)
+    # Bluetooth firmware
+    firmware.bcm4335c0;
 
   mobile.system.type = "android";
 

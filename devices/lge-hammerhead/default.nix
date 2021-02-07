@@ -16,7 +16,15 @@
   };
 
   mobile.boot.stage-1 = {
-    kernel.package = pkgs.callPackage ./kernel { };
+    kernel = {
+      package = pkgs.callPackage ./kernel { };
+
+      # Source: https://gitlab.com/postmarketOS/pmaports/-/blob/9ae9a7eb2c70d6b23e52826f3c63c84117680003/device/testing/device-lg-hammerhead/deviceinfo
+      modular = true;
+      modules = [
+        "pm8941_pwrkey" "qnoc_msm8974" "rmi_i2c"
+      ];
+    };
   };
 
   mobile.system.android = {
@@ -30,14 +38,14 @@
     };
   };
 
-  boot.kernelParams = [
-    # Extracted from an Android boot image
-    "console=ttyHSL0,115200,n8"
-    "androidboot.hardware=hammerhead"
-    "user_debug=31"
-    "maxcpus=2"
-    "msm_watchdog_v2.enable=1"
-  ];
+  boot = {
+    # Source: https://gitlab.com/postmarketOS/pmaports/-/blob/9ae9a7eb2c70d6b23e52826f3c63c84117680003/device/testing/device-lg-hammerhead/deviceinfo
+    kernelParams = [
+      "console=tty0"
+      "console=ttyMSM0,115200,n8"
+      "PMOS_NO_OUTPUT_REDIRECT"
+    ];
+  };
 
   mobile.system.type = "android";
 

@@ -46,6 +46,9 @@
 , ncurses
 , pkgconfig
 , runtimeShell
+
+# For "with-dtb" wrapper
+, runCommand
 }:
 
 let
@@ -82,6 +85,11 @@ in
 
 # Enable support for android-specific "Image.gz-dtb" appended images
 , isImageGzDtb ? false
+
+# Generates a wrapper around the kernel that concatenates "dtb" to the
+# image. Unlike isImageGzDtb, this doesn't require kernel patches and
+# the base kernel build can be shared between devices.
+, dtb ? null
 
 # Mark the kernel as compressed, assumes .gz
 , isCompressed ? "gz"
@@ -159,7 +167,10 @@ in
 # We'll re-use this derivation inside passthru for normalizedConfig and menuconfig.
 let kernelDerivation =
 
-stdenv.mkDerivation (inputArgs // {
+stdenv.mkDerivation (builtins.removeAttrs inputArgs [
+  # Avoid rebuilding base kernel for different dtbs
+  "dtb"
+] // {
   pname = "linux";
   inherit src version;
   inherit qcdt_dtbs exynos_dtbs exynos_platform exynos_subtype;
@@ -541,4 +552,16 @@ stdenv.mkDerivation (inputArgs // {
     });
   };
 });
-in kernelDerivation
+in
+if hasDTB && dtb != null
+then runCommand "${kernelDerivation.name}-with-dtb" {
+    passthru = kernelDerivation.passthru // {
+      file = "${kernelDerivation.file}-dtb";
+      unwrapped = kernelDerivation;
+    };
+  } ''
+    mkdir $out
+    ln -s ${kernelDerivation}/* $out
+    cat $out/${kernelDerivation.file} $out/dtbs/${dtb}.dtb > $out/${kernelDerivation.file}-dtb
+  ''
+else kernelDerivation

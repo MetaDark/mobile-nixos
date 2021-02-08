@@ -5,7 +5,7 @@
  * **Do not** open a Pull Request without having verified the port works.
  */
 {
-  mobile.device.name = "google-hammerhead";
+  mobile.device.name = "lge-hammerhead";
   mobile.device.identity = {
     name = "Nexus 5";
     manufacturer = "LGE";

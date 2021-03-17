@@ -1,5 +1,8 @@
 { pkgs, ... }:
 
+let
+  firmware = pkgs.callPackage ./firmware { };
+in
 {
   mobile.device.name = "lge-hammerhead";
   mobile.device.identity = {
@@ -41,6 +44,12 @@
   };
 
   boot = {
+    # Source: https://gitlab.com/postmarketOS/pmaports/-/blob/9ae9a7eb2c70d6b23e52826f3c63c84117680003/device/testing/device-lg-hammerhead/modules-load.conf
+    kernelModules = [
+      # Wi-Fi module
+      "brcmfmac"
+    ];
+
     # Source: https://gitlab.com/postmarketOS/pmaports/-/blob/9ae9a7eb2c70d6b23e52826f3c63c84117680003/device/testing/device-lg-hammerhead/deviceinfo
     kernelParams = [
       "console=tty0"
@@ -48,6 +57,13 @@
       "PMOS_NO_OUTPUT_REDIRECT"
     ];
   };
+
+  hardware.firmware = with pkgs; with firmware; [
+    # Wi-Fi firmware
+    bcm4399
+    bcm4399-config
+    wireless-regdb
+  ];
 
   mobile.system.type = "android";
 

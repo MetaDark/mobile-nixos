@@ -51,7 +51,9 @@
 
   mobile.system.type = "android";
 
-  mobile.usb.mode = "gadgetfs";
+  # TODO: Figure out why none of the gadgetfs functions work
+  # mobile.usb.mode = "gadgetfs";
+  mobile.usb.mode = null;
 
   # Google
   mobile.usb.idVendor = "18D1";
@@ -61,8 +63,16 @@
   mobile.usb.idProduct = "4EE7";
 
   mobile.usb.gadgetfs.functions = {
+    # Uncaught Exception
+    # Device or resource busy (Errno:EBUSY)
+    # However, USB networking still works when mobile.usb.mode = null
     rndis = "rndis.usb0";
+
+    # hangs at vendor boot screen (seems to never start stage-1?)
     mass_storage = "mass_storage.0";
+
+    # Uncaught Exception
+    # Device or resource busy (Errno:EBUSY)
     adb = "ffs.adb";
   };
 }
